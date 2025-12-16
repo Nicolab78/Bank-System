@@ -1,1 +1,35 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# OS files
 .DS_Store
+
+# Spring Boot
+application-local.yml
+application-dev.yml
+
+# Lombok
+lombok.config
+
+# Java
+*.class
+
+# Temporary files
+*.tmp
+*.swp
