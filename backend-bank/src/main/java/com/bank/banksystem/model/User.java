@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -31,6 +33,9 @@ public class User {
 
     @Column(nullable = false)
     private boolean enabled = true;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Account> accounts;
 
 }
 
