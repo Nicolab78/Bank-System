@@ -7,7 +7,7 @@ import com.bank.banksystem.dto.account.CreateAccountDTO;
 
 public interface IAccountService {
 
-    AccountDTO createAccount(CreateAccountDTO dto);
+    AccountDTO createAccount(CreateAccountDTO createAccountDTO);
 
     AccountDTO getAccountById(Long id);
 
