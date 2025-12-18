@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.bank.banksystem.dto.user.UpdateUserDTO;
-import com.bank.banksystem.dto.user.UserDTO;
+import com.bank.banksystem.dto.user.UserDto;
 import com.bank.banksystem.service.interfaces.IUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
         try {
-            List<UserDTO> users = userService.getAllUsers();
+            List<UserDto> users = userService.getAllUsers();
             return ResponseEntity.ok(users);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody CreateUserDTO createUserDTO) {
         try {
-            UserDTO createdUser = userService.createUser(createUserDTO);
+            UserDto createdUser = userService.createUser(createUserDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
-            UserDTO user = userService.getUserById(id);
+            UserDto user = userService.getUserById(id);
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping("/username/{username}")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
         try {
-            UserDTO user = userService.getUserByUsername(username);
+            UserDto user = userService.getUserByUsername(username);
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -66,7 +66,7 @@ public class UserController {
             @RequestBody UpdateUserDTO updateUserDTO
     ) {
         try {
-            UserDTO updatedUser = userService.updateUser(id, updateUserDTO);
+            UserDto updatedUser = userService.updateUser(id, updateUserDTO);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
