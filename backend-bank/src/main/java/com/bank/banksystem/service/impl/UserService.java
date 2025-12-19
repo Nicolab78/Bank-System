@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bank.banksystem.dto.user.CreateUserDTO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bank.banksystem.dto.user.UpdateUserDTO;
-import com.bank.banksystem.dto.user.UserDTO;
+import com.bank.banksystem.dto.user.UserDto;
 import com.bank.banksystem.model.User;
 import com.bank.banksystem.model.Role;
 import com.bank.banksystem.repository.UserRepository;
@@ -22,9 +23,10 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findByEnabled(true);
         if (users.isEmpty()) {
             throw new RuntimeException("No active users found.");
@@ -35,7 +37,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO createUser(CreateUserDTO createUserDTO) {
+    public UserDto createUser(CreateUserDTO createUserDTO) {
 
         if (userRepository.findByUsername(createUserDTO.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
@@ -44,7 +46,7 @@ public class UserService implements IUserService {
         User user = User.builder()
                 .username(createUserDTO.getUsername())
                 .email(createUserDTO.getEmail())
-                .password(createUserDTO.getPassword())
+                .password(passwordEncoder.encode(createUserDTO.getPassword()))
                 .role(Role.USER)
                 .enabled(true)
                 .build();
@@ -54,7 +56,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO getUserById(Long id) {
+    public UserDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User with ID " + id + " not found."));
 
@@ -66,7 +68,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO getUserByUsername(String username) {
+    public UserDto getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User with username " + username + " not found."));
 
@@ -78,7 +80,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO updateUser(Long id, UpdateUserDTO updateUserDTO) {
+    public UserDto updateUser(Long id, UpdateUserDTO updateUserDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User with ID " + id + " not found."));
 
@@ -90,7 +92,7 @@ public class UserService implements IUserService {
         user.setEmail(updateUserDTO.getEmail());
 
         if (updateUserDTO.getPassword() != null && !updateUserDTO.getPassword().isEmpty()) {
-            user.setPassword(updateUserDTO.getPassword());
+            user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
         }
 
         userRepository.save(user);
@@ -106,12 +108,13 @@ public class UserService implements IUserService {
         userRepository.save(user);
     }
 
-    private UserDTO mapToDto(User user) {
-        return UserDTO.builder()
+    private UserDto mapToDto(User user) {
+        return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .enabled(user.isEnabled())
                 .build();
     }
 }

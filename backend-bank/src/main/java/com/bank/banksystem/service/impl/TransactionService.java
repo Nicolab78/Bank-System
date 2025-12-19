@@ -10,10 +10,15 @@ import com.bank.banksystem.repository.TransactionRepository;
 import com.bank.banksystem.service.interfaces.ITransactionService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -90,6 +95,33 @@ public class TransactionService implements ITransactionService {
         transactionRepository.save(transaction);
 
         return mapToDto(transaction);
+    }
+
+    @Override
+    public List<TransactionDTO> getTransactionsByAccount(Long accountId, int page, int size, String type) {
+
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found."));
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Transaction> transactions = transactionRepository
+                .findBySourceAccountIdOrTargetAccountIdOrderByDateDesc(
+                        accountId,
+                        accountId,
+                        pageable
+                );
+
+        Stream<Transaction> stream = transactions.stream();
+
+        if (type != null && !type.isBlank()) {
+            TransactionType filterType = TransactionType.valueOf(type.toUpperCase());
+            stream = stream.filter(t -> t.getType() == filterType);
+        }
+
+        return stream
+                .map(this::mapToDto)
+                .toList();
     }
 
     private TransactionDTO mapToDto(Transaction transaction) {
