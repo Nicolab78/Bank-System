@@ -44,9 +44,15 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
 
-                        .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "MANAGER", "USER")
-                        .requestMatchers("/api/accounts/**").hasAnyRole("ADMIN", "MANAGER", "USER")
-                        .requestMatchers("/api/transactions/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                        //.requestMatchers("/api/users/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                        //.requestMatchers("/api/accounts/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                        //.requestMatchers("/api/transactions/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                        //.requestMatchers("/api/cards/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/transactions/**").permitAll()
+                        .requestMatchers("/api/accounts/**").permitAll()
+                        .requestMatchers("/api/cards/**").permitAll() // on va laisser ça temporairement, ça peut servir de modèle pour les autres si on veut tester
 
                         .anyRequest().authenticated()
                 )
