@@ -3,6 +3,7 @@ package com.bank.banksystem.controller;
 import com.bank.banksystem.dto.card.CardDTO;
 import com.bank.banksystem.dto.card.CreateCardDTO;
 import com.bank.banksystem.service.interfaces.ICardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
+@RequiredArgsConstructor
 public class CardController {
 
     private final ICardService cardService;
-
-    public CardController(ICardService cardService) {
-        this.cardService = cardService;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createCard(@RequestBody CreateCardDTO createCardDTO) {
