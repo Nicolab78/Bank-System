@@ -47,7 +47,7 @@ public class UserService implements IUserService {
                 .username(createUserDTO.getUsername())
                 .email(createUserDTO.getEmail())
                 .password(passwordEncoder.encode(createUserDTO.getPassword()))
-                .role(Role.USER)
+                .role(createUserDTO.getRole())
                 .enabled(true)
                 .build();
 
@@ -93,6 +93,10 @@ public class UserService implements IUserService {
 
         if (updateUserDTO.getPassword() != null && !updateUserDTO.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
+        }
+
+        if (updateUserDTO.getRole() != null) {
+            user.setRole(updateUserDTO.getRole());
         }
 
         userRepository.save(user);
