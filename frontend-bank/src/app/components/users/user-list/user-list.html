@@ -1,0 +1,78 @@
+<div class="user-list-container">
+    <h2>Gestion des utilisateurs</h2>
+</div>
+<!-- Ajoute le formulaire ici -->
+<app-user-form></app-user-form>
+
+@if (editingUser()) {
+    <app-user-edit 
+        [user]="editingUser()!" 
+        (editClosed)="editingUser.set(null)">
+    </app-user-edit>
+}
+
+<div class="user-list-container">
+    <h2>Liste des utilisateurs</h2>
+</div>
+
+@if (userService.loading()) {
+    <div class="loading">
+        Chargement...
+    </div>
+}
+
+@if (userService.error()) {
+    <div class="error">
+        {{ userService.error() || 'Une erreur est survenue' }}
+    </div>
+}
+
+@if (!userService.loading() && !userService.error()) {
+    <div class="table-container">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (user of userService.users(); track user.id) {
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <span class="role-badge" [class]="'role-' + user.role.toLowerCase()">
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge" [class]="user.enabled ? 'status-active' : 'status-inactive'">
+                                {{ user.enabled ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-edit" (click)="onEditUser(user)">
+                                Modifier
+                            </button>
+                            <button class="btn-delete" (click)="onDeleteUser(user.id)">
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (userService.users().length === 0) {
+            <div class="empty-state">
+                Aucun utilisateur trouvé
+            </div>
+        }
+    </div>
+}

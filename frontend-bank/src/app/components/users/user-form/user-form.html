@@ -1,0 +1,94 @@
+<div class="user-form-container">
+  <h3>Créer un utilisateur</h3>
+  
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+    
+    <div class="form-group">
+      <label for="username">Nom d'utilisateur</label>
+      <input 
+        type="text" 
+        id="username"
+        formControlName="username"
+        class="form-control"
+        [class.error]="username?.invalid && username?.touched"
+      >
+      @if (username?.invalid && username?.touched) {
+        <div class="error-message">
+          @if (username?.errors?.['required']) {
+            Le nom d'utilisateur est requis
+          }
+          @if (username?.errors?.['minlength']) {
+            Minimum 3 caractères
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        id="email"
+        formControlName="email"
+        class="form-control"
+        [class.error]="email?.invalid && email?.touched"
+      >
+      @if (email?.invalid && email?.touched) {
+        <div class="error-message">
+          @if (email?.errors?.['required']) {
+            L'email est requis
+          }
+          @if (email?.errors?.['email']) {
+            Format d'email invalide
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mot de passe</label>
+      <input 
+        type="password" 
+        id="password"
+        formControlName="password"
+        class="form-control"
+        [class.error]="password?.invalid && password?.touched"
+      >
+      @if (password?.invalid && password?.touched) {
+        <div class="error-message">
+          @if (password?.errors?.['required']) {
+            Le mot de passe est requis
+          }
+          @if (password?.errors?.['minlength']) {
+            Minimum 6 caractères
+          }
+        </div>
+      }
+    </div>
+    <div class="form-group">
+    <label for="role">Rôle</label>
+    <select 
+        id="role"
+        formControlName="role"
+        class="form-control"
+        [class.error]="role?.invalid && role?.touched"
+    >
+    <option value="USER">Utilisateur</option>
+    <option value="ADMIN">Administrateur</option>
+    </select>
+    @if (role?.invalid && role?.touched) {
+        <div class="error-message">
+        Le rôle est requis
+        </div>
+        }
+    </div>
+
+    <button 
+      type="submit" 
+      class="btn-submit"
+      [disabled]="!userForm.valid"
+    >
+      Créer l'utilisateur
+    </button>
+  </form>
+</div>

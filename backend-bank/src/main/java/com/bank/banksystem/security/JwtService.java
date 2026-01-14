@@ -1,5 +1,6 @@
 package com.bank.banksystem.security;
 
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,15 +21,11 @@ public class JwtService {
 
     private final String secretKey;
     private final long jwtExpiration;
-    private final long refreshExpiration;
 
-    public JwtService(
-            @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.expiration}") long jwtExpiration,
-            @Value("${jwt.refresh-expiration}") long refreshExpiration) {
+    public JwtService(@Value("${security.jwt.secret-key}") String secretKey,
+                      @Value("${security.jwt.expiration-time}") long jwtExpiration) {
         this.secretKey = secretKey;
         this.jwtExpiration = jwtExpiration;
-        this.refreshExpiration = refreshExpiration;
     }
 
     public String extractUsername(String token) {
@@ -48,18 +45,13 @@ public class JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
-    }
-
     public long getExpirationTime() {
         return jwtExpiration;
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        extraClaims.put("roles", userDetails.getAuthorities());
-
-        return Jwts.builder()
+        return Jwts
+                .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -82,7 +74,8 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+        return Jwts
+                .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
