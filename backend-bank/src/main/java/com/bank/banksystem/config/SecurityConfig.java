@@ -54,7 +54,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/accounts/**").permitAll()
                         .requestMatchers("/api/cards/**").permitAll() // on va laisser ça temporairement, ça peut servir de modèle pour les autres si on veut tester
 
-                        .anyRequest().authenticated()
+                        //.anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 .sessionManagement(session -> session
