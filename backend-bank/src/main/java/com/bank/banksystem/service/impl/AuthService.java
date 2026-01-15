@@ -45,15 +45,18 @@ public class AuthService {
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
             String accessToken = jwtService.generateToken(userDetails);
-            String refreshToken = jwtService.generateToken(userDetails);
 
             log.info("Connexion réussie pour l'utilisateur: {}", user.getUsername());
 
             UserDto userDto = mapToUserDto(user);
 
-            return new AuthResponseDto(accessToken, refreshToken, jwtService.getExpirationTime(), userDto);
+            return AuthResponseDto.builder()
+                    .accessToken(accessToken)
+                    .tokenType("Bearer")
+                    .expiresIn(jwtService.getExpirationTime())
+                    .user(userDto)
+                    .build();
 
         } catch (BadCredentialsException e) {
             log.warn("Tentative de connexion échouée pour: {}", loginDto.getUsername());
@@ -107,11 +110,14 @@ public class AuthService {
         }
 
         String newAccessToken = jwtService.generateToken(tempUserDetails);
-        String newRefreshToken = jwtService.generateToken(tempUserDetails);
-
         UserDto userDto = mapToUserDto(user);
 
-        return new AuthResponseDto(newAccessToken, newRefreshToken, jwtService.getExpirationTime(), userDto);
+        return AuthResponseDto.builder()
+                .accessToken(newAccessToken)
+                .tokenType("Bearer")
+                .expiresIn(jwtService.getExpirationTime())
+                .user(userDto)
+                .build();
     }
 
     public UserDto getUserProfile(String username) {
