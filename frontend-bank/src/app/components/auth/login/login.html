@@ -1,0 +1,84 @@
+<div class="login-container">
+    <div class="login-card">
+        <h2>Connexion</h2>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label>Nom d'utilisateur</label>
+                <input
+                    type="text"
+                    id="username"
+                    formControlName="username"
+                    [class.error]="username?.invalid && username?.touched"
+                    placeholder="Votre nom d'utilisateur"
+                >
+
+                @if (username?.invalid && username?.touched) {
+                    <div class="error-message">
+                        @if (username?.errors?.['required']) {
+                            Le nom d'utilisateur est requis
+                        }
+                        @if (username?.errors?.['minlength']) {
+                            Minimum 3 caractères
+                        }
+                    </div>
+                    }
+
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    [class.error]="password?.invalid && password?.touched"
+                    placeholder="Votre mot de passe"
+                >
+
+                @if (password?.invalid && password?.touched) {
+                    <div class="error-message">
+                        @if (password?.errors?.['required']) {
+                            Le nom d'utilisateur est requis
+                        }
+                        @if (password?.errors?.['minlength']) {
+                            Minimum 3 caractères
+                        }
+                    </div>
+                    }
+            </div>
+
+            @if (authService.error()){
+                <div class="alert-error">
+                    {{ authService.error()}}
+
+                </div>
+            }
+
+            <button
+                type="submit"
+                class="btn-login"
+                [disabled]="!loginForm.valid && authService.loading()"
+            >
+
+            @if (authService.loading()){
+                Connexion...
+            } @else {
+                Se connecter
+            }
+        
+        </button>
+
+        <p class="register-link">
+            Pas de compte ?
+            <a routerLink="/register">S'inscrire</a>
+        </p>
+
+        </form>
+
+
+    </div>
+
+
+
+</div>
