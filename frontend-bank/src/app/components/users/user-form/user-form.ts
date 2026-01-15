@@ -22,7 +22,7 @@ export class UserForm {
       email: ['',[Validators.required, Validators.email]],
       password: ['',[Validators.required, Validators.minLength(8)]],
       role: ['USER', [Validators.required]]
-    })
+    });
   }
 
   onSubmit(){
