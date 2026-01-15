@@ -126,19 +126,11 @@ public class AuthController {
         }
     }
 
-    /**
-     * Déconnexion (côté client principalement, JWT non révoqué côté serveur)
-     */
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> logout(Authentication authentication) {
 
         log.info("Déconnexion de l'utilisateur: {}", authentication.getName());
-
-        // Dans une implémentation complète, on pourrait :
-        // 1. Ajouter le token à une liste noire (blacklist)
-        // 2. Supprimer les refresh tokens de la base de données
-        // 3. Logger l'événement de déconnexion
 
         return ResponseEntity.ok(Map.of(
                 "success", true,
@@ -146,9 +138,6 @@ public class AuthController {
         ));
     }
 
-    /**
-     * Vérification de la validité du token
-     */
     @GetMapping("/verify")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> verifyToken(Authentication authentication) {
@@ -160,9 +149,6 @@ public class AuthController {
         ));
     }
 
-    /**
-     * Endpoint de santé pour vérifier l'API
-     */
     @GetMapping("/health")
     public ResponseEntity<?> health() {
         return ResponseEntity.ok(Map.of(
